@@ -41,9 +41,12 @@
 ### 子模块C：自然语言查询
 
 用户可用中文提问，系统自动返回查询结果：
+
+```
 "计算机科学与技术专业有哪些必修课"
 "数据结构课程有多少学分"
 "对比计算机科学与技术专业"
+```
 
 ---
 
@@ -62,32 +65,35 @@
 ## 🗄️ 数据库设计
 
 ### ER图
-┌─────────────┐ ┌─────────────┐ ┌─────────────┐
-│ University │────<│ Department │────<│ Major │
-│ id (PK) │ │ id (PK) │ │ id (PK) │
-│ name │ │ university │ │ dept_id │
-│ short_name │ │ name │ │ name │
-│ location │ │ code │ │ total_credits│
-└─────────────┘ └─────────────┘ └──────┬──────┘
-│
-▼
-┌─────────────────┐
-│ MajorCourse │
-│ id (PK) │
-│ major_id(FK) │
-│ course_id(FK) │
-│ is_required │
-└─────────────────┘
-│
-▼
-┌─────────────────┐
-│ Course │
-│ id (PK) │
-│ course_code │
-│ name │
-│ credits │
-│ hours │
-└─────────────────┘
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  University │────<│  Department │────<│    Major    │
+│  id (PK)    │     │  id (PK)    │     │  id (PK)    │
+│  name       │     │  university │     │  dept_id    │
+│  short_name │     │  name       │     │  name       │
+│  location   │     │  code       │     │ total_credits│
+└─────────────┘     └─────────────┘     └──────┬──────┘
+                                                 │
+                                                 ▼
+                                        ┌─────────────────┐
+                                        │   MajorCourse   │
+                                        │   id (PK)       │
+                                        │   major_id(FK)  │
+                                        │   course_id(FK) │
+                                        │   is_required   │
+                                        └─────────────────┘
+                                                 │
+                                                 ▼
+                                        ┌─────────────────┐
+                                        │     Course      │
+                                        │   id (PK)       │
+                                        │   course_code   │
+                                        │   name          │
+                                        │   credits       │
+                                        │   hours         │
+                                        └─────────────────┘
+```
 
 ### 核心表结构
 
@@ -117,65 +123,128 @@
 ```bash
 git clone https://github.com/42411079/curriculum_system.git
 cd curriculum_system
-2. 创建并激活虚拟环境
+```
+
+### 2. 创建并激活虚拟环境
+
+```bash
 conda create -n curriculum python=3.10 -y
 conda activate curriculum
-3. 安装依赖
+```
+
+### 3. 安装依赖
+
+```bash
 pip install fastapi uvicorn sqlalchemy
-4. 初始化数据库
+```
+
+### 4. 初始化数据库
+
+```bash
 python scripts/init_db.py
+```
+
+**预期输出：**
+
+```
 ✅ 数据库表创建成功
 ✅ 创建大学: 西南财经大学
 ✅ 创建 13 个学院
 ✅ 创建 39 个专业
 ✅ 导入 61 门课程
-5. 导入上海财经大学数据
+```
+
+### 5. 导入上海财经大学数据
+
+```bash
 python scripts/import_sufe.py
-6. 启动服务
+```
+
+### 6. 启动服务
+
+```bash
 python run.py
-预期输出：
+```
+
+**预期输出：**
+
+```
 INFO:     Uvicorn running on http://0.0.0.0:8000
 INFO:     Application startup complete.
-7. 访问API文档
+```
+
+### 7. 访问API文档
+
 打开浏览器访问：http://localhost:8000/docs
 
-📡 API接口列表
-接口	方法	说明
-/queries/major/{id}/required-courses	GET	查询专业必修课
-/queries/course/{identifier}	GET	查询课程学分学时
-/queries/major/{id}/total-credits	GET	查询专业总学分
-/queries/course/{identifier}/majors	GET	查询开设课程的专业
-/queries/department/{id}/overview	GET	查询学院专业概览
-/queries/courses/search	GET	关键词搜索课程
-/compare/major-courses	GET	跨校对比课程
-/compare/total-credits	GET	跨校对比学分
-/nl/query	POST	自然语言查询
-🧪 测试示例
-1. 查询计算机专业必修课
-bash
+---
+
+## 📡 API接口列表
+
+| 接口 | 方法 | 说明 |
+|:---|:---:|:---|
+| `/queries/major/{id}/required-courses` | GET | 查询专业必修课 |
+| `/queries/course/{identifier}` | GET | 查询课程学分学时 |
+| `/queries/major/{id}/total-credits` | GET | 查询专业总学分 |
+| `/queries/course/{identifier}/majors` | GET | 查询开设课程的专业 |
+| `/queries/department/{id}/overview` | GET | 查询学院专业概览 |
+| `/queries/courses/search` | GET | 关键词搜索课程 |
+| `/compare/major-courses` | GET | 跨校对比课程 |
+| `/compare/total-credits` | GET | 跨校对比学分 |
+| `/nl/query` | POST | 自然语言查询 |
+
+---
+
+## 🧪 测试示例
+
+### 1. 查询计算机专业必修课
+
+```bash
 GET /queries/major/1/required-courses
-2. 查询课程信息
-bash
+```
+
+### 2. 查询课程信息
+
+```bash
 GET /queries/course/数据结构
-3. 关键词搜索
-bash
+```
+
+### 3. 关键词搜索
+
+```bash
 GET /queries/courses/search?keyword=数据
-4. 跨校对比
-bash
+```
+
+### 4. 跨校对比
+
+```bash
 GET /compare/major-courses?major_name=计算机科学与技术
-5. 自然语言查询
-bash
+```
+
+### 5. 自然语言查询
+
+```bash
 POST /nl/query
 question=计算机科学与技术专业有哪些必修课
-📊 数据统计
-实体	数量
-大学	2所
-学院	15个
-专业	39个
-课程	61门
-专业-课程关联	120+条
-📁 项目结构
-text
+```
+
+---
+
+## 📊 数据统计
+
+| 实体 | 数量 |
+|:---:|:---:|
+| 大学 | 2所 |
+| 学院 | 15个 |
+| 专业 | 39个 |
+| 课程 | 61门 |
+| 专业-课程关联 | 120+条 |
+
+---
+
+## 📁 项目结构
+
+```
 curriculum_system/
 ├── run.py                      # 启动入口
 ├── app/
@@ -194,8 +263,16 @@ curriculum_system/
 ├── data/
 │   └── sufe_data.json          # 上海财大JSON数据
 └── curriculum.db               # SQLite数据库
-👨‍💻 作者
-GitHub：42411079
+```
 
-📄 许可证
-本项目采用 MIT License 开源许可证。
+---
+
+## 👨‍💻 作者
+
+- **GitHub**：[42411079](https://github.com/42411079)
+
+---
+
+## 📄 许可证
+
+本项目采用 **MIT License** 开源许可证。
