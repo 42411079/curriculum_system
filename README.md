@@ -186,25 +186,4 @@ curriculum_system/
 ## 许可证
 
 MIT License
-```
 
----
-
-## 使用步骤
-
-1. 打开您的GitHub仓库：
-   https://github.com/42411079/curriculum_system
-
-2. 点击 `README.md` 文件
-
-3. 点击右上角的 ✏️ **铅笔图标**
-
-4. **删除原有内容**，粘贴上面的完整内容
-
-5. 点击页面底部的 **Commit changes...**
-
-6. 选择 **Commit directly to the main branch**
-
-7. 点击 **Commit changes**
-
-完成后刷新页面，就能看到完整的README了！
