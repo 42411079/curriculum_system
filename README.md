@@ -25,7 +25,7 @@
 ### 子模块A：基础查询
 
 | 序号 | 功能 | 说明 |
-|------|------|------|
+|:---:|------|------|
 | 1 | 查询某专业的必修课列表 | 获取指定专业的所有必修课程 |
 | 2 | 查询某门课程的学分、学时信息 | 获取课程的详细教学信息 |
 | 3 | 查询某专业的总学分要求 | 获取专业的毕业学分要求 |
@@ -41,99 +41,99 @@
 ### 子模块C：自然语言查询
 
 用户可用中文提问，系统自动返回查询结果：
-
-```bash
 "计算机科学与技术专业有哪些必修课"
 "数据结构课程有多少学分"
 "对比计算机科学与技术专业"
-🛠️ 技术栈
-层级	技术	版本
-Web框架	FastAPI	0.128.0
-ORM	SQLAlchemy	2.0+
-数据库	SQLite	3.0+
-语言	Python	3.10
-环境管理	Anaconda	-
-🗄️ 数据库设计
-ER图
-text
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│  University │────<│  Department │────<│    Major    │
-│  id (PK)    │     │  id (PK)    │     │  id (PK)    │
-│  name       │     │  university_id(FK) │  dept_id(FK)│
-│  short_name │     │  name       │     │  name       │
-│  location   │     │  code       │     │ total_credits│
-└─────────────┘     └─────────────┘     └──────┬──────┘
-                                                 │
-                                                 │
-                    ┌────────────────────────────┼────────────────────────────┐
-                    │                            │                            │
-                    ▼                            ▼                            ▼
-          ┌─────────────────┐          ┌─────────────────┐          ┌─────────────────┐
-          │   MajorCourse   │          │     Course      │          │  CoursePrereq   │
-          │   id (PK)       │          │   id (PK)       │          │   id (PK)       │
-          │   major_id(FK)  │──────────│   course_code   │          │   course_id(FK) │
-          │   course_id(FK) │          │   name          │          │   prereq_id(FK) │
-          │   is_required   │          │   credits       │          │   type          │
-          │   semester      │          │   hours         │          └─────────────────┘
-          └─────────────────┘          │   course_type   │
-                                       └─────────────────┘
-核心表结构
-表名	说明	主键	外键
-university	大学信息	id	-
-department	学院信息	id	university_id
-major	专业信息	id	dept_id
-course	课程信息	id	-
-major_course	专业-课程关联表	id	major_id, course_id
-约束设计
-主键：各表的 id 字段，自增整数
 
-外键：保证数据引用完整性，级联删除
+---
 
-唯一约束：university.name、(university_id, department.name)、(major_id, course_id)
+## 🛠️ 技术栈
 
-检查约束：credits > 0、hours >= 0
+| 层级 | 技术 | 版本 |
+|:---:|:---:|:---:|
+| Web框架 | FastAPI | 0.128.0 |
+| ORM | SQLAlchemy | 2.0+ |
+| 数据库 | SQLite | 3.0+ |
+| 语言 | Python | 3.10 |
+| 环境管理 | Anaconda | - |
 
-💻 环境要求
-Python 3.9 或更高版本
+---
 
-Anaconda（推荐，用于环境管理）
+## 🗄️ 数据库设计
 
-SQLite（Python内置）
+### ER图
+┌─────────────┐ ┌─────────────┐ ┌─────────────┐
+│ University │────<│ Department │────<│ Major │
+│ id (PK) │ │ id (PK) │ │ id (PK) │
+│ name │ │ university │ │ dept_id │
+│ short_name │ │ name │ │ name │
+│ location │ │ code │ │ total_credits│
+└─────────────┘ └─────────────┘ └──────┬──────┘
+│
+▼
+┌─────────────────┐
+│ MajorCourse │
+│ id (PK) │
+│ major_id(FK) │
+│ course_id(FK) │
+│ is_required │
+└─────────────────┘
+│
+▼
+┌─────────────────┐
+│ Course │
+│ id (PK) │
+│ course_code │
+│ name │
+│ credits │
+│ hours │
+└─────────────────┘
 
-操作系统：Windows / macOS / Linux
+### 核心表结构
 
-🚀 安装与运行
-1. 克隆仓库
-bash
+| 表名 | 说明 | 主键 | 外键 |
+|:---:|:---:|:---:|:---:|
+| university | 大学信息 | id | - |
+| department | 学院信息 | id | university_id |
+| major | 专业信息 | id | dept_id |
+| course | 课程信息 | id | - |
+| major_course | 专业-课程关联表 | id | major_id, course_id |
+
+---
+
+## 💻 环境要求
+
+- Python 3.9 或更高版本
+- Anaconda（推荐，用于环境管理）
+- SQLite（Python内置）
+- 操作系统：Windows / macOS / Linux
+
+---
+
+## 🚀 安装与运行
+
+### 1. 克隆仓库
+
+```bash
 git clone https://github.com/42411079/curriculum_system.git
 cd curriculum_system
 2. 创建并激活虚拟环境
-bash
 conda create -n curriculum python=3.10 -y
 conda activate curriculum
 3. 安装依赖
-bash
 pip install fastapi uvicorn sqlalchemy
 4. 初始化数据库
-bash
 python scripts/init_db.py
-预期输出：
-
-text
 ✅ 数据库表创建成功
 ✅ 创建大学: 西南财经大学
 ✅ 创建 13 个学院
 ✅ 创建 39 个专业
 ✅ 导入 61 门课程
 5. 导入上海财经大学数据
-bash
 python scripts/import_sufe.py
 6. 启动服务
-bash
 python run.py
 预期输出：
-
-text
 INFO:     Uvicorn running on http://0.0.0.0:8000
 INFO:     Application startup complete.
 7. 访问API文档
@@ -169,33 +169,33 @@ POST /nl/query
 question=计算机科学与技术专业有哪些必修课
 📊 数据统计
 实体	数量
-🏛️ 大学	2所
-📚 学院	15个
-🎓 专业	39个
-📖 课程	61门
-🔗 专业-课程关联	120+条
+大学	2所
+学院	15个
+专业	39个
+课程	61门
+专业-课程关联	120+条
 📁 项目结构
 text
 curriculum_system/
-├── 📄 run.py                      # 启动入口
-├── 📁 app/
-│   ├── 📁 api/
-│   │   ├── 📄 queries.py          # 基础查询接口
-│   │   ├── 📄 compare.py          # 跨校对比接口
-│   │   └── 📄 nl_query.py         # 自然语言查询接口
-│   ├── 📁 core/
-│   │   ├── 📄 config.py           # 配置文件
-│   │   └── 📄 database.py         # 数据库连接
-│   └── 📁 models/
-│       └── 📄 models.py           # 数据模型
-├── 📁 scripts/
-│   ├── 📄 init_db.py              # 数据库初始化
-│   └── 📄 import_sufe.py          # 上海财大数据导入
-├── 📁 data/
-│   └── 📄 sufe_data.json          # 上海财大JSON数据
-└── 📄 curriculum.db               # SQLite数据库
+├── run.py                      # 启动入口
+├── app/
+│   ├── api/
+│   │   ├── queries.py          # 基础查询接口
+│   │   ├── compare.py          # 跨校对比接口
+│   │   └── nl_query.py         # 自然语言查询接口
+│   ├── core/
+│   │   ├── config.py           # 配置文件
+│   │   └── database.py         # 数据库连接
+│   └── models/
+│       └── models.py           # 数据模型
+├── scripts/
+│   ├── init_db.py              # 数据库初始化
+│   └── import_sufe.py          # 上海财大数据导入
+├── data/
+│   └── sufe_data.json          # 上海财大JSON数据
+└── curriculum.db               # SQLite数据库
 👨‍💻 作者
-GitHub：@42411079
+GitHub：42411079
 
 📄 许可证
 本项目采用 MIT License 开源许可证。
